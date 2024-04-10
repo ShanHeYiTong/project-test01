@@ -73,11 +73,13 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 Nest is [MIT licensed](LICENSE).
 
 ## doc
- 创建user模块
+- 创建user模块
     - nest g module user
- 创建user服务
+- 创建user服务
     - nest g service user
- 创建控制器
+- 创建控制器
     - nest g controller user
- 生成一套crud模板
+- 生成一套crud模板
     - nest g resource list
+- 安装swagger包
+- npm install --save @nestjs/swagger swagger-ui-express
