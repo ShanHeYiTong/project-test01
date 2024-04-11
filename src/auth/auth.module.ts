@@ -7,6 +7,8 @@ import { UserService } from "../user/user.service";
 import { jwtConstants } from "./constants";
 import { JwtModule, JwtService } from "@nestjs/jwt";
 import { JwtStrategy } from "./jwt.strategy";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { User } from "../user/entities/user.entity";
 
 @Module({
   //导入用户模块
@@ -18,6 +20,7 @@ import { JwtStrategy } from "./jwt.strategy";
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
     }),
+    TypeOrmModule.forFeature([User]),
   ],
   providers: [AuthService,UserService,LocalStrategy,JwtStrategy]
 })
