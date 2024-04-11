@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from "@nestjs/common";
 import { TransformInterceptor } from "./global/interceptor/transform/transform.interceptor";
+import { HttpExceptionFilter } from "./global/filter/http-exception/http-exception.filter";
 
 async function bootstrap() {
   //开启cors 策略 { cors: true }
@@ -20,6 +21,7 @@ async function bootstrap() {
   SwaggerModule.setup('doc', app, document);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor()) //注册拦截器
+  app.useGlobalFilters(new HttpExceptionFilter()); //注册过虑器
   await app.listen(4000);
 }
 bootstrap();
