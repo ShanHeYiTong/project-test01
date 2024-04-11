@@ -15,6 +15,7 @@ async function bootstrap() {
     .setVersion('1.0') //版本
     .addTag('Api/V1') //接口标签分类
     // .addTag('list') //接口标签分类
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   //访问doc

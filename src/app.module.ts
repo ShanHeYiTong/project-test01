@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from "./global/guard/jwt-auth.guard";
 import envConfig from "../config/envConfig";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { RedisModule } from './db/redis/redis.module';
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
         username: configService.get<string>('DB_USERNAME') ?? 'root',
         password: configService.get<string>('DB_PASSWORD') ?? 'root',
         database: configService.get<string>('DB_DATABASE') ?? 'project-test01',
-        synchronize: true,
+        synchronize: false,
         retryDelay: 500,
         retryAttempts: 10,
         autoLoadEntities: true,
@@ -46,7 +47,8 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [envConfig.path],
-    }),],
+    }),
+    RedisModule,],
   controllers: [AppController],
   providers: [AppService,
     {

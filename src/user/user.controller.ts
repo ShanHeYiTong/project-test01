@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common";
-import { ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiHeader, ApiQuery, ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -7,24 +7,31 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { AuthService } from "../auth/auth.service";
 import { Public } from "../global/decorator/public.decorator";
 
+// @ApiBearerAuth() // 表示使用Bearer Token进行身份验证
+// @ApiHeader({
+//   name: 'Authorization',
+//   description: 'Bearer Token',
+// })
+// @ApiSecurity('JWT') // 使用JWT认证方式
+@ApiBearerAuth()
 @ApiTags('user') //指定标签
 @Controller('user')
 export class UserController {
   constructor(private readonly authService: AuthService,
               private readonly userService: UserService) {}
 
-  @UseGuards(AuthGuard('local'))
-  // @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
+  // @UseGuards(AuthGuard('local'))
+  // // @UseGuards(LocalAuthGuard)
+  // @Post('auth/login')
+  // async login(@Request() req) {
+  //   return this.authService.login(req.user);
+  // }
+  //
+  // @UseGuards(AuthGuard('jwt'))
+  // @Get('profile')
+  // getProfile(@Request() req) {
+  //   return req.user;
+  // }
 
   //增
   @Post('create')
