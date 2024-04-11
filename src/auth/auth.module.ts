@@ -1,27 +1,37 @@
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
+import { AuthController } from './auth.controller';
+import { LocalStrategy } from "../global/strategy/local.strategy";
+import { User } from "../user/entities/user.entity";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { JwtModule } from "@nestjs/jwt";
 import { AuthService } from './auth.service';
 import { UserModule } from "../user/user.module";
-import { LocalStrategy } from "./local.strategy";
-import { PassportModule } from "@nestjs/passport";
 import { UserService } from "../user/user.service";
-import { jwtConstants } from "./constants";
-import { JwtModule, JwtService } from "@nestjs/jwt";
-import { JwtStrategy } from "./jwt.strategy";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "../user/entities/user.entity";
+import { ConfigService } from "@nestjs/config";
+
+// const jwtModule = JwtModule.register({
+//   secret: 'suibianshenme',
+//   signOptions: { expiresIn: '4h' },
+// });
+
+const jwtModule = JwtModule.registerAsync({
+  inject: [ConfigService],
+  useFactory: async (configService: ConfigService) => ({
+    secret: configService.get('JWT_SECRET') ?? 'secret',
+    signOptions: {
+      // expiresIn: configService.get('JWT_EXPIRES_IN') ?? '10m',
+    },
+  }),
+});
 
 @Module({
-  //导入用户模块
   imports: [
-    UserModule,
-    PassportModule,
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
-    }),
     TypeOrmModule.forFeature([User]),
+    jwtModule,
+    UserModule,
   ],
-  providers: [AuthService,UserService,LocalStrategy,JwtStrategy]
+  controllers: [AuthController],
+  providers: [LocalStrategy, AuthService,UserService],
+  exports: [jwtModule],
 })
 export class AuthModule {}

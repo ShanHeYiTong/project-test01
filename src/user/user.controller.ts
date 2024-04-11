@@ -1,13 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common";
 import { ApiQuery, ApiTags } from "@nestjs/swagger";
-import { LocalAuthGuard } from "../auth/local-auth.guard";
-import { AuthService } from "../auth/auth.service";
 import { AuthGuard } from "@nestjs/passport";
 import { UserService } from "./user.service";
-import { CreateListDto } from "../list/dto/create-list.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateListDto } from "../list/dto/update-list.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { AuthService } from "../auth/auth.service";
+import { Public } from "../global/decorator/public.decorator";
 
 @ApiTags('user') //指定标签
 @Controller('user')
@@ -35,6 +33,7 @@ export class UserController {
   }
 
   //单查
+  // @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findOneeApi(@Param('id') id: number) {
     return this.userService.findOnee(id)
